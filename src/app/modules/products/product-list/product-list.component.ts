@@ -23,6 +23,7 @@ export class ProductListComponent {
   isSuccess!: boolean;
 
   page!: number;
+  total!: number;
   products: Array<IProduct> = [];
 
   items: Array<number> = [];
@@ -66,6 +67,7 @@ export class ProductListComponent {
         this.isSuccess = true;
 
         this.page = page;
+        this.total = res.total;
 
         this.products = res.products;
 
@@ -87,6 +89,7 @@ export class ProductListComponent {
         this.isSuccess = true;
 
         this.page = page;
+        this.total = res.total;
 
         this.products = res.products;
 
