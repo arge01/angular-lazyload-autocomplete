@@ -14,15 +14,17 @@
           >Search
         </label>
         <div class="relative z-10">
-          <div *ngIf="!isDisabled" class="absolute complete">
-            <ul>
-              <li
-                (click)="onHandle(item)"
-                [ngClass]="search === item ? 'active' : ''"
-                *ngFor="let item of filter">
-                {{ item }}
-              </li>
-            </ul>
+          <div *ngIf="!isDisabled">
+            <div *ngIf="response | async as response" class="absolute complete">
+              <ul>
+                <li
+                  (click)="onHandle(item)"
+                  [ngClass]="search === item ? 'active' : ''"
+                  *ngFor="let item of filter">
+                  {{ item }}
+                </li>
+              </ul>
+            </div>
           </div>
           <div
             class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">

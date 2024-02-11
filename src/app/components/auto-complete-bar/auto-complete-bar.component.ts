@@ -1,7 +1,13 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import {
+  Model as IProduct,
+  Response as IResponse,
+} from 'src/app/models/product';
 
 import { ProductService } from 'src/app/services/product.service';
 
@@ -11,6 +17,8 @@ import { ProductService } from 'src/app/services/product.service';
   styleUrls: ['./auto-complete-bar.component.scss'],
 })
 export class AutoCompleteBarComponent {
+  response!: Observable<IResponse<IProduct>>;
+
   items: Array<string> = [];
   filter: Array<string> | undefined;
 
@@ -39,19 +47,23 @@ export class AutoCompleteBarComponent {
       }
       this.search = params?.['query'] || undefined;
     });
-
-    this.getAllProduct();
   }
 
-  async bindSearch(value: string) {
-    this.filter = await this.items.filter(
-      f => f?.toUpperCase().indexOf(value?.toUpperCase()) > -1
-    );
-    if (this.filter?.length) {
-      this.isDisabled = false;
-    } else {
-      this.isDisabled = true;
-    }
+  bindSearch(value: string) {
+    this.response = this.services.findAll();
+    this.response.subscribe(res => {
+      this.items = [...res.products.map(v => v.title)];
+
+      this.filter = this.items.filter(
+        f => f?.toUpperCase().indexOf(value?.toUpperCase()) > -1
+      );
+
+      if (this.filter?.length) {
+        this.isDisabled = false;
+      } else {
+        this.isDisabled = true;
+      }
+    });
   }
 
   emptySearch() {
@@ -90,8 +102,6 @@ export class AutoCompleteBarComponent {
   }
 
   getAllProduct() {
-    this.items = [];
-
     this.services.findAll().subscribe(res => {
       this.items = [...res.products.map(v => v.title)];
     });

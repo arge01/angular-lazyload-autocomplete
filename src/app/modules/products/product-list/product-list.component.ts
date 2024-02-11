@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { ActivatedRoute } from '@angular/router';
 
@@ -9,7 +10,6 @@ import {
   Response as IResponse,
 } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'product-list',
