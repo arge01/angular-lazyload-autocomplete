@@ -20,7 +20,7 @@
           <li>
             <button
               [disabled]="response.skip === 0"
-              (click)="getPage(((response.skip / 10) - 1), query)"
+              (click)="getPage(((response.skip / limit) - 1), query)"
               class="h-10 px-5 text-gray-600 disabled:cursor-no-drop transition-colors duration-150 rounded-l-lg focus:shadow-outline hover:bg-gray-100">
               <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                 <path
@@ -34,7 +34,7 @@
             <button
               (click)="getPage((item - 1), query)"
               [className]="
-                item === ((response.skip / 10) + 1)
+                item === ((response.skip / limit) + 1)
                   ? 'h-10 px-5 bg-gray-600 text-white transition-colors duration-150 focus:shadow-outline hover:bg-gray-600 hover:cursor-no-drop'
                   : 'h-10 px-5 text-gray-600 transition-colors duration-150 focus:shadow-outline hover:bg-gray-100'
               ">
@@ -43,7 +43,7 @@
           </li>
           <li>
             <button
-              [disabled]="(response.skip + response.limit) === (response.total)"
+              [disabled]="(response.skip + limit) === (response.total)"
               (click)="getPage(((response.skip / 10) + 1), query)"
               class="h-10 px-5 text-gray-600 disabled:cursor-no-drop transition-colors duration-150 bg-white rounded-r-lg focus:shadow-outline hover:bg-gray-100">
               <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">

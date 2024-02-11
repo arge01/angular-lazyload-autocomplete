@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable, of, share } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { ActivatedRoute } from '@angular/router';
 
@@ -20,6 +20,9 @@ export class ProductListComponent {
   query!: string;
   response$!: Observable<IResponse<IProduct>>;
 
+  limit: number = constants.limit;
+  skip: number = constants.skip;
+
   constructor(
     private route: ActivatedRoute,
     private services: ProductService
@@ -31,7 +34,7 @@ export class ProductListComponent {
         this.query = params?.['query'];
         this.getSearch(params?.['query']);
       } else {
-        this.getAllCriteria({ limit: 10, skip: 0 });
+        this.getAllCriteria({ limit: this.limit, skip: this.skip });
       }
     });
   }
@@ -49,7 +52,7 @@ export class ProductListComponent {
 
   getItems(total: number): Array<number> {
     const items = [];
-    for (let i = 0; i < Math.ceil(total / constants.limit); i++) {
+    for (let i = 0; i < Math.ceil(total / this.limit); i++) {
       items[i] = i + 1;
     }
 
