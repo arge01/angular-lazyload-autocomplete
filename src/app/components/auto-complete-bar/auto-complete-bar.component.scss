@@ -1,0 +1,52 @@
+.complete {
+  width: 90%;
+  height: auto;
+  top: 57px;
+  background: #f9fafb;
+  border-radius: 30px;
+  padding: 30px;
+  border: 1px solid #f4f4f4;
+  box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.12);
+  left: 5%;
+
+  ul {
+    max-height: 150px;
+    overflow-y: auto;
+
+    li {
+      font-size: 9pt;
+      background: #f9f9f9;
+      margin: 5px;
+      padding: 7px;
+      border: 1px solid #f0f0f0;
+      color: #989898;
+      border-radius: 15px;
+      position: relative;
+      cursor: pointer;
+
+      &:hover, &.active {
+        background: #374151;
+        color: #fff;
+      }
+    }
+
+    &::-webkit-scrollbar {
+      width: 2px;
+    }
+  
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: #fbfbfb;
+    }
+  
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: #ddd;
+    }
+  
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  }
+}

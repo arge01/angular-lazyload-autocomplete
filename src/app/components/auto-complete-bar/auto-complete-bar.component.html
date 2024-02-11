@@ -1,0 +1,70 @@
+<section class="flex flex-row flex-wrap justify-center">
+  <div class="flex flex-row flex-wrap justify-center pt-8">
+    <h4 class="text-2xl font-light">Lazyload & Auto Complete</h4>
+
+    <div class="form-group pt-12 w-full relative">
+      <form
+        autocomplete="off"
+        class="form"
+        [formGroup]="userForm"
+        (ngSubmit)="onSubmit()">
+        <label
+          for="search"
+          class="mb-2 text-sm font-medium text-gray-900 sr-only light:text-white"
+          >Search
+        </label>
+        <div class="relative z-10">
+          <div *ngIf="!isDisabled" class="absolute complete">
+            <ul>
+              <li
+                (click)="onHandle(item)"
+                [ngClass]="search === item ? 'active' : ''"
+                *ngFor="let item of filter">
+                {{ item }}
+              </li>
+            </ul>
+          </div>
+          <div
+            class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg
+              class="w-4 h-4 text-gray-500 light:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20">
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+            </svg>
+          </div>
+          <input
+            [ngModel]="search"
+            aria-autocomplete="both"
+            aria-haspopup="false"
+            autocapitalize="off"
+            autocomplete="off"
+            autocorrect="off"
+            autofocus=""
+            role="combobox"
+            spellcheck="false"
+            aria-label="Pesquisar"
+            type="search"
+            name="search"
+            formControlName="search"
+            (input)="onInput($event)"
+            class="focus:outline-none block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-gray-500 focus:border-gray-500 light:bg-gray-700 light:border-gray-600 light:placeholder-gray-400 light:text-white light:focus:ring-gray-500 light:focus:border-gray-500"
+            placeholder="Search" />
+          <button
+            type="submit"
+            [disabled]="isDisabled"
+            class="disabled:bg-gray-500 light:ring-gray-800 border-none disabled:cursor-no-drop text-white absolute end-2.5 bottom-2.5 bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-2xl text-sm px-4 py-2 light:bg-gray-600 light:hover:bg-gray-700 light:focus:ring-gray-800">
+            Search
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

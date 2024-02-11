@@ -1,0 +1,22 @@
+$background: #fff;
+$color: #161616;
+$default-font: 'Montserrat', sans-serif;
+$default-font-size: 9pt;
+
+$breakpoint-x-tablet: 1200px;
+$breakpoint-tablet: 992px;
+$breakpoint-x-phone: 768px;
+$breakpoint-phone: 576px;
+$breakpoint-s-phone: 375px;
+$breakpoint-xs-phone: 320px;
+
+:root {
+  --white: white;
+  --gray: #818181;
+  --light-gray: #f1f1f1;
+  --black: #161616;
+  --light-black: #5f5f5f;
+  --yellow: #ef9e1a;
+  --red: $red;
+  --border-radius: 45px;
+}
