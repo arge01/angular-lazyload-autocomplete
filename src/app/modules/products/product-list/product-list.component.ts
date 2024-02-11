@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of, share } from 'rxjs';
 
 import { ActivatedRoute } from '@angular/router';
 
@@ -18,15 +18,7 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class ProductListComponent {
   query!: string;
-
-  response!: Observable<IResponse<IProduct>>;
-  isSuccess!: boolean;
-
-  page!: number;
-  total!: number;
-  products: Array<IProduct> = [];
-
-  items: Array<number> = [];
+  response$!: Observable<IResponse<IProduct>>;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,9 +29,9 @@ export class ProductListComponent {
     this.route.queryParams.subscribe(params => {
       if (params?.['query']) {
         this.query = params?.['query'];
-        this.getSearch(1, params?.['query']);
+        this.getSearch(params?.['query']);
       } else {
-        this.getAllCriteria(1, { limit: 10, skip: 0 });
+        this.getAllCriteria({ limit: 10, skip: 0 });
       }
     });
   }
@@ -47,55 +39,28 @@ export class ProductListComponent {
   getPage(item: number, query: string) {
     const criteria: Criteria = {
       limit: 10,
-      skip: (item - 1) * 10,
+      skip: item * 10,
     };
 
     this.query
-      ? this.getSearch(item, query, criteria)
-      : this.getAllCriteria(item, criteria);
+      ? this.getSearch(query, criteria)
+      : this.getAllCriteria(criteria);
   }
 
-  getAllCriteria(page: number, criteria: Criteria) {
-    this.isSuccess = false;
+  getItems(total: number): Array<number> {
+    const items = [];
+    for (let i = 0; i < Math.ceil(total / constants.limit); i++) {
+      items[i] = i + 1;
+    }
 
-    this.page = 0;
-    this.items = [];
-
-    this.services
-      .findAllCriteria(criteria)
-      .subscribe((res: IResponse<IProduct>) => {
-        this.isSuccess = true;
-
-        this.page = page;
-        this.total = res.total;
-
-        this.products = res.products;
-
-        for (let i = 0; i < Math.ceil(res.total / constants.limit); i++) {
-          this.items[i] = i + 1;
-        }
-      });
+    return items;
   }
 
-  getSearch(page: number, query: string, criteria?: Criteria) {
-    this.isSuccess = false;
+  getAllCriteria(criteria: Criteria) {
+    this.response$ = this.services.findAllCriteria(criteria);
+  }
 
-    this.page = 0;
-    this.items = [];
-
-    this.services
-      .findAllSearch(query, criteria)
-      .subscribe((res: IResponse<IProduct>) => {
-        this.isSuccess = true;
-
-        this.page = page;
-        this.total = res.total;
-
-        this.products = res.products;
-
-        for (let i = 0; i < Math.ceil(res.total / constants.limit); i++) {
-          this.items[i] = i + 1;
-        }
-      });
+  getSearch(query: string, criteria?: Criteria) {
+    this.response$ = this.services.findAllSearch(query, criteria);
   }
 }

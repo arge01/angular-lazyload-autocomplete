@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
 
 import { Model as IProduct } from 'src/app/models/product';
 
@@ -12,20 +13,7 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class ProductViewComponent {
   query!: string;
-
-  product: IProduct = {
-    id: 0,
-    title: '',
-    description: '',
-    price: 0,
-    discountPercentage: 0,
-    rating: 0,
-    stock: 0,
-    brand: '',
-    category: '',
-    thumbnail: '',
-    images: []
-  };
+  product$!: Observable<IProduct>;
 
   constructor(
     private services: ProductService,
@@ -43,6 +31,6 @@ export class ProductViewComponent {
   }
 
   getProduct(id: number) {
-    this.services.findById(id).subscribe(res => (this.product = res));
+    this.product$ = this.services.findById(id);
   }
 }
