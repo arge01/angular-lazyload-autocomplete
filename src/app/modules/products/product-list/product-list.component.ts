@@ -9,6 +9,7 @@ import {
   Response as IResponse,
 } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'product-list',
@@ -18,7 +19,7 @@ import { ProductService } from 'src/app/services/product.service';
 export class ProductListComponent {
   query!: string;
 
-  response: IResponse<IProduct> | boolean = false;
+  response!: Observable<IResponse<IProduct>>;
   page!: number;
 
   products: Array<IProduct> = [];
@@ -46,22 +47,20 @@ export class ProductListComponent {
     this.getSearch(item, query, criteria);
   }
 
-  getSearch(page: number, query: string, criteria?: Criteria) {
-    this.response = false;
+  async getSearch(page: number, query: string, criteria?: Criteria) {
     this.page = 0;
     this.items = [];
 
-    this.services
-      .findAllSearch(query, criteria)
-      .subscribe((res: IResponse<IProduct>) => {
-        this.response = res;
-        this.page = page;
+    this.response = this.services.findAllSearch(query, criteria);
 
-        this.products = res.products;
+    this.response.subscribe((res: IResponse<IProduct>) => {
+      this.page = page;
 
-        for (let i = 0; i < Math.ceil(res.total / constants.limit); i++) {
-          this.items[i] = i + 1;
-        }
-      });
+      this.products = res.products;
+
+      for (let i = 0; i < Math.ceil(res.total / constants.limit); i++) {
+        this.items[i] = i + 1;
+      }
+    });
   }
 }
