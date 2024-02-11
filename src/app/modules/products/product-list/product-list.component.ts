@@ -21,7 +21,7 @@ export class ProductListComponent {
 
   response!: Observable<IResponse<IProduct>>;
   isSuccess!: boolean;
-  
+
   page!: number;
   products: Array<IProduct> = [];
 
@@ -34,8 +34,12 @@ export class ProductListComponent {
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.query = params?.['query'];
-      this.getSearch(1, params?.['query']);
+      if (params?.['query']) {
+        this.query = params?.['query'];
+        this.getSearch(1, params?.['query']);
+      } else {
+        this.getAllCriteria(1, { limit: 10, skip: 0 });
+      }
     });
   }
 
@@ -45,7 +49,30 @@ export class ProductListComponent {
       skip: (item - 1) * 10,
     };
 
-    this.getSearch(item, query, criteria);
+    this.query
+      ? this.getSearch(item, query, criteria)
+      : this.getAllCriteria(item, criteria);
+  }
+
+  getAllCriteria(page: number, criteria: Criteria) {
+    this.isSuccess = false;
+
+    this.page = 0;
+    this.items = [];
+
+    this.services
+      .findAllCriteria(criteria)
+      .subscribe((res: IResponse<IProduct>) => {
+        this.isSuccess = true;
+
+        this.page = page;
+
+        this.products = res.products;
+
+        for (let i = 0; i < Math.ceil(res.total / constants.limit); i++) {
+          this.items[i] = i + 1;
+        }
+      });
   }
 
   getSearch(page: number, query: string, criteria?: Criteria) {
@@ -54,16 +81,18 @@ export class ProductListComponent {
     this.page = 0;
     this.items = [];
 
-    this.services.findAllSearch(query, criteria).subscribe((res: IResponse<IProduct>) => {
-      this.isSuccess = true;
+    this.services
+      .findAllSearch(query, criteria)
+      .subscribe((res: IResponse<IProduct>) => {
+        this.isSuccess = true;
 
-      this.page = page;
+        this.page = page;
 
-      this.products = res.products;
+        this.products = res.products;
 
-      for (let i = 0; i < Math.ceil(res.total / constants.limit); i++) {
-        this.items[i] = i + 1;
-      }
-    });
+        for (let i = 0; i < Math.ceil(res.total / constants.limit); i++) {
+          this.items[i] = i + 1;
+        }
+      });
   }
 }
