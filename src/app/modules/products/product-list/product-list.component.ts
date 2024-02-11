@@ -20,8 +20,9 @@ export class ProductListComponent {
   query!: string;
 
   response!: Observable<IResponse<IProduct>>;
+  isSuccess!: boolean;
+  
   page!: number;
-
   products: Array<IProduct> = [];
 
   items: Array<number> = [];
@@ -47,13 +48,15 @@ export class ProductListComponent {
     this.getSearch(item, query, criteria);
   }
 
-  async getSearch(page: number, query: string, criteria?: Criteria) {
+  getSearch(page: number, query: string, criteria?: Criteria) {
+    this.isSuccess = false;
+
     this.page = 0;
     this.items = [];
 
-    this.response = this.services.findAllSearch(query, criteria);
+    this.services.findAllSearch(query, criteria).subscribe((res: IResponse<IProduct>) => {
+      this.isSuccess = true;
 
-    this.response.subscribe((res: IResponse<IProduct>) => {
       this.page = page;
 
       this.products = res.products;

@@ -21,7 +21,7 @@
             </a>
             <img
               class="object-contain w-full lg:h-full"
-              src="{{ product?.images?.[0] }}"
+              src="{{ product.thumbnail }}"
               alt="" />
             <a
               class="absolute right-0 transform lg:mr-2 top-1/2 translate-1/2"
@@ -133,7 +133,7 @@
             </div>
             <p
               class="inline-block text-2xl font-semibold text-gray-700 dark:text-gray-400">
-              <span>${{ product?.price }}</span>
+              <span>${{ product.price }}</span>
             </p>
           </div>
           <div class="mb-6">

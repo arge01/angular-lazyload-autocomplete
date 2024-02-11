@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -18,6 +18,7 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class AutoCompleteBarComponent {
   response!: Observable<IResponse<IProduct>>;
+  isSuccess!: boolean;
 
   items: Array<string> = [];
   filter: Array<string> | undefined;
@@ -31,7 +32,8 @@ export class AutoCompleteBarComponent {
     private builder: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private services: ProductService
+    private services: ProductService,
+    private elementRef: ElementRef
   ) {
     this.userForm = this.builder.group({
       search: ['', Validators.required],
@@ -47,11 +49,21 @@ export class AutoCompleteBarComponent {
       }
       this.search = params?.['query'] || undefined;
     });
+
+    this.isDisabled = true;
+    this.isSuccess = false;
+  }
+
+  ngAfterViewInit() {
+    this.elementRef.nativeElement.focus();
   }
 
   bindSearch(value: string) {
-    this.response = this.services.findAll();
-    this.response.subscribe(res => {
+    this.isSuccess = false;
+
+    this.services.findAll().subscribe(res => {
+      this.isSuccess = true;
+
       this.items = [...res.products.map(v => v.title)];
 
       this.filter = this.items.filter(
@@ -68,12 +80,14 @@ export class AutoCompleteBarComponent {
 
   emptySearch() {
     this.isDisabled = true;
+    this.isSuccess = false;
   }
 
   async onInput(event: Event) {
     if (!(event?.target as HTMLInputElement)?.value) {
       await this.router.navigate(['']);
-      this.isDisabled = false;
+      this.isDisabled = true;
+      this.isSuccess = false;
     }
     this.onComplete(event);
   }
@@ -99,11 +113,5 @@ export class AutoCompleteBarComponent {
         this.router.navigate(['/products'], { queryParams: { query: search } });
       }
     }
-  }
-
-  getAllProduct() {
-    this.services.findAll().subscribe(res => {
-      this.items = [...res.products.map(v => v.title)];
-    });
   }
 }

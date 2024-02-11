@@ -15,7 +15,7 @@
         </label>
         <div class="relative z-10">
           <div *ngIf="!isDisabled">
-            <div *ngIf="response | async as response" class="absolute complete">
+            <div *ngIf="isSuccess" class="absolute complete">
               <ul>
                 <li
                   (click)="onHandle(item)"
