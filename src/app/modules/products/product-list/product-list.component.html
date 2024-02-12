@@ -1,4 +1,9 @@
-<ng-container *ngIf="response$ | async as response">
+<ng-template #loading>
+  <div class="fixed w-full h-full flex items-center justify-center top-0 left-0 z-100">
+    <div class="rounded-md h-12 w-12 border-4 border-t-4 border-blue-500 animate-spin"></div>
+  </div>
+</ng-template>
+<ng-container *ngIf="response$ | async as response; else loading">
   <!-- Product Section List -->
   <section
     id="products"
@@ -11,7 +16,7 @@
     </product-item>
   </section>
   <!-- End Product Section List -->
-  
+
   <!-- Pagination -->
   <section class="flex fixed left-0 w-full bottom-0 justify-center">
     <div class="bg-white p-4 flex items-center flex-wrap">
@@ -20,7 +25,7 @@
           <li>
             <button
               [disabled]="response.skip === 0"
-              (click)="getPage(((response.skip / limit) - 1), query)"
+              (click)="getPage(response.skip / limit - 1, query)"
               class="h-10 px-5 text-gray-600 disabled:cursor-no-drop transition-colors duration-150 rounded-l-lg focus:shadow-outline hover:bg-gray-100">
               <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                 <path
@@ -32,9 +37,9 @@
           </li>
           <li *ngFor="let item of getItems(response.total)">
             <button
-              (click)="getPage((item - 1), query)"
+              (click)="getPage(item - 1, query)"
               [className]="
-                item === ((response.skip / limit) + 1)
+                item === response.skip / limit + 1
                   ? 'h-10 px-5 bg-gray-600 text-white transition-colors duration-150 focus:shadow-outline hover:bg-gray-600 hover:cursor-no-drop'
                   : 'h-10 px-5 text-gray-600 transition-colors duration-150 focus:shadow-outline hover:bg-gray-100'
               ">
@@ -43,8 +48,8 @@
           </li>
           <li>
             <button
-              [disabled]="(response.skip + limit) === (response.total)"
-              (click)="getPage(((response.skip / 10) + 1), query)"
+              [disabled]="response.skip + limit === response.total"
+              (click)="getPage(response.skip / 10 + 1, query)"
               class="h-10 px-5 text-gray-600 disabled:cursor-no-drop transition-colors duration-150 bg-white rounded-r-lg focus:shadow-outline hover:bg-gray-100">
               <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
                 <path
@@ -60,4 +65,3 @@
   </section>
   <!-- End Pagination -->
 </ng-container>
-
