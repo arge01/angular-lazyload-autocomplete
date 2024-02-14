@@ -61,6 +61,9 @@ export class AutoCompleteBarComponent {
   bindSearch(value: string) {
     this.isSuccess = false;
 
+    // Burada data ngOninit içerisinede alınıp filter yapılinirdi. 
+    // Fakat bu service' i bir category filter' i gibi davranmasını istedim.
+    // Api' de category ile search yapamadığımdan bütün datayı tekrar getiriyorum.
     this.services.findAll().subscribe(res => {
       this.isSuccess = true;
 
